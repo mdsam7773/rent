@@ -18,10 +18,15 @@ def month_name_filter(month_str):
 
 
 # ------------ BASIC CONFIG ------------
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, "rent_management.db")
+# Use a writable directory for Render
+DATA_DIR = os.environ.get("DATA_DIR", "/data")  # on Render, /data is writable & persistent
+os.makedirs(DATA_DIR, exist_ok=True)
+
+DB_PATH = os.path.join(DATA_DIR, "rent_management.db")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
+
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "some-secret-key"  # for session if needed
 
