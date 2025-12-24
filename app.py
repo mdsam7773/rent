@@ -1,36 +1,33 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime , timedelta
+from datetime import datetime, timedelta
 import os
 from apscheduler.schedulers.background import BackgroundScheduler
 from werkzeug.security import generate_password_hash, check_password_hash
-
 import urllib.parse
-
-
 
 app = Flask(__name__)
 
-
+# ---------- JINJA FILTER ----------
 @app.template_filter("month_name")
 def month_name_filter(month_str):
     return datetime.strptime(month_str, "%Y-%m").strftime("%B %Y")
-
+# ---------------------------------
 
 # ------------ BASIC CONFIG ------------
-# Use a writable directory for Render
-DATA_DIR = os.environ.get("DATA_DIR", "/tmp")  # on Render, /data is writable & persistent
 
-
+# Use /tmp on Render (always writable)
+DATA_DIR = os.environ.get("DATA_DIR", "/tmp")
 DB_PATH = os.path.join(DATA_DIR, "rent_management.db")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
-
-
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = "some-secret-key"  # for session if needed
+
+# SECRET KEY (use env in production)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 db = SQLAlchemy(app)
+
 
 
 # ------------ MODELS ------------
