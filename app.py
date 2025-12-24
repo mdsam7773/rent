@@ -50,6 +50,17 @@ class Admin(db.Model):
         return check_password_hash(self.password_hash, password)
 
 
+def ensure_default_admin():
+    admin = Admin.query.filter_by(username="admin").first()
+    if not admin:
+        admin = Admin(username="admin")
+        admin.set_password("admin123")
+        db.session.add(admin)
+        db.session.commit()
+        print("Default admin ensured")
+
+
+
 
 
 class Tenant(db.Model):
@@ -79,6 +90,16 @@ class RentDue(db.Model):
 
 
 # ------------ HELPERS ------------
+
+
+def ensure_default_admin():
+    admin = Admin.query.filter_by(username="admin").first()
+    if not admin:
+        admin = Admin(username="admin")
+        admin.set_password("admin123")
+        db.session.add(admin)
+        db.session.commit()
+        print("Default admin ensured")
 
 
 
@@ -480,16 +501,17 @@ def generate_fake_3_months(tenant_id):
 
 
 # ------------ INIT DB & RUN ------------
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
 
-        if not Admin.query.first():
-            admin = Admin(username="admin")
-            admin.set_password("admin123")
-            db.session.add(admin)
-            db.session.commit()
-            print("Default admin created → username: admin | password: admin123")
+with app.app_context():
+    db.create_all()
+    ensure_default_admin()
+
+    if not Admin.query.first():
+        admin = Admin(username="admin")
+        admin.set_password("admin123")
+        db.session.add(admin)
+        db.session.commit()
+        print("Default admin created → username: admin | password: admin123")
 
         # ❌ Scheduler disabled for Railway free tier (enable later)
         # start_scheduler()
