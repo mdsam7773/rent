@@ -19,8 +19,8 @@ def month_name_filter(month_str):
 
 # ------------ BASIC CONFIG ------------
 # Use a writable directory for Render
-DATA_DIR = os.environ.get("DATA_DIR", "/data")  # on Render, /data is writable & persistent
-os.makedirs(DATA_DIR, exist_ok=True)
+DATA_DIR = os.environ.get("DATA_DIR", "/tmp")  # on Render, /data is writable & persistent
+
 
 DB_PATH = os.path.join(DATA_DIR, "rent_management.db")
 
