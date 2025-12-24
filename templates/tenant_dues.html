@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h3>Dues for {{ tenant.name }}</h3>
+
+<p><strong>Room:</strong> {{ tenant.room_no }} |
+<strong>Phone:</strong> {{ tenant.phone }}</p>
+
+<p><strong>Months Due:</strong> {{ months_due }}</p>
+<p><strong>Total Due:</strong> ₹{{ total_due }}</p>
+
+<table class="table table-bordered table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>Month</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Month</th>
+      <th>Paid Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in dues %}
+    <tr>
+      <td>{{ d.month }}</td>
+      <td>₹{{ d.amount }}</td>
+      <td>{{ d.status }}</td>
+      <td>{{ format_month(d.month) }}</td>
+      <td>
+        {% if d.paid_date %}
+          {{ d.paid_date.strftime("%Y-%m-%d") }}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>
+  {% if d.status == 'unpaid' %}
+      <a href="/rent/mark-paid/{{ d.id }}" class="btn btn-sm btn-success">
+        Mark Paid
+      </a>
+  {% else %}
+      <a href="/rent/mark-unpaid/{{ d.id }}" class="btn btn-sm btn-warning">
+        Mark Unpaid
+      </a>
+  {% endif %}
+</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="/tenants" class="btn btn-secondary">Back to Tenants</a>
+{% endblock %}

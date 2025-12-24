@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+rent_management.db
+.env
+instance/

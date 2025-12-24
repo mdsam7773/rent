@@ -1,0 +1,91 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<h3 class="mb-4">Dashboard</h3>
+
+<div class="row mb-4">
+
+  <div class="col-md-3">
+    <div class="card text-bg-primary shadow">
+      <div class="card-body">
+        <h6>Total Tenants</h6>
+        <h3>{{ total_tenants }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card text-bg-success shadow">
+      <div class="card-body">
+        <h6>Total Monthly Rent</h6>
+        <h3>₹{{ total_monthly_rent }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card text-bg-danger shadow">
+      <div class="card-body">
+        <h6>Total Due Amount</h6>
+        <h3>₹{{ total_due_amount }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card text-bg-warning shadow">
+      <div class="card-body">
+        <h6>Tenants with Due</h6>
+        <h3>{{ tenants_with_due }}</h3>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<hr>
+
+<h5 class="mt-4">Top Due Tenants</h5>
+
+<table class="table table-bordered table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>Name</th>
+      <th>Room</th>
+      <th>Months Due</th>
+      <th>Total Due</th>
+      <th>Action</th>
+      <th>Reminder</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in tenant_due_list %}
+    <tr>
+      <td>{{ row.tenant.name }}</td>
+      <td>{{ row.tenant.room_no }}</td>
+      <td>{{ row.months_due }}</td>
+      <td>₹{{ row.total_due }}</td>
+      <td>
+        <a href="/tenant/{{ row.tenant.id }}/dues" class="btn btn-sm btn-info">
+          View
+        </a>
+      </td>
+      <td>
+    {% if row.whatsapp_link %}
+    <a href="{{ row.whatsapp_link }}" target="_blank" class="btn btn-success btn-sm">WhatsApp</a>
+  {% else %} 
+    <span class="text-muted">N/A</span>
+  {% endif %}
+</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if tenant_due_list|length == 0 %}
+<p class="text-success mt-3">🎉 All tenants are paid. No dues!</p>
+{% endif %}
+
+{% endblock %}

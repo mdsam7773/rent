@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h3>Tenants</h3>
+
+<a href="/tenant/add" class="btn btn-primary mb-3">Add Tenant</a>
+
+<table class="table table-bordered table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Room</th>
+      <th>Monthly Rent</th>
+      <th>Months Due</th>
+      <th>Total Due Amount</th>
+      <th>Details</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in tenants %}
+    <tr>
+      <td>{{ row.tenant.name }}</td>
+      <td>{{ row.tenant.phone }}</td>
+      <td>{{ row.tenant.room_no }}</td>
+      <td>₹{{ row.tenant.monthly_rent }}</td>
+      <td>{{ row.months_due }}</td>
+      <td>₹{{ row.total_due }}</td>
+      <td>
+        <a href="/tenant/{{ row.tenant.id }}/dues" class="btn btn-sm btn-info">
+          View Dues
+        </a>
+      </td>
+      <td>
+        <a href="/tenant/edit/{{ row.tenant.id }}" class="btn btn-sm btn-warning">Edit</a>
+        <a href="/tenant/delete/{{ row.tenant.id }}" class="btn btn-sm btn-danger">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

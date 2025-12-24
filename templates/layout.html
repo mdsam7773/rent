@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title or "Rent Manager" }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <a href="" class="btn btn-outline-light me-2">Rent Manager</a>
+
+
+    {% if session.get("admin_id") %}
+    <a href="/dashboard" class="btn btn-outline-light me-2">Dashboard</a>
+    <a href="/tenants" class="btn btn-outline-light me-2">Tenants</a>
+    <a href="/change-password" class="btn btn-outline-warning me-2">Change Password</a>
+    <a href="/logout" class="btn btn-danger">Logout</a>
+
+
+    <a href="/generate-current-month" class="btn btn-outline-light">
+      Generate Current Month Bills
+    </a>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="container mt-3">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
