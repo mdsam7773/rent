@@ -248,23 +248,25 @@ def dashboard():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    try:
+        if request.method == "POST":
+            username = request.form["username"]
+            password = request.form["password"]
 
+            admin = Admin.query.filter_by(username=username).first()
+            print("LOGIN DEBUG → admin:", admin)
 
+            if admin and admin.check_password(password):
+                session["admin_id"] = admin.id
+                return redirect("/dashboard")
+            else:
+                return render_template("login.html", error="Invalid username or password")
 
+        return render_template("login.html")
 
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-
-        admin = Admin.query.filter_by(username=username).first()
-
-        if admin and admin.check_password(password):
-            session["admin_id"] = admin.id
-            return redirect("/dashboard")
-        else:
-            return render_template("login.html", error="Invalid username or password")
-
-    return render_template("login.html")
+    except Exception as e:
+        print("LOGIN ERROR:", e)
+        raise e
 
 
 @app.route("/logout")
