@@ -480,7 +480,6 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
-        # ✅ Create default admin safely INSIDE app context
         if not Admin.query.first():
             admin = Admin(username="admin")
             admin.set_password("admin123")
@@ -488,11 +487,11 @@ if __name__ == "__main__":
             db.session.commit()
             print("Default admin created → username: admin | password: admin123")
 
-        # ✅ Start scheduler safely
-        if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-            start_scheduler()
+        # ❌ Scheduler disabled for Railway free tier (enable later)
+        # start_scheduler()
 
-    app.run(debug=True, use_reloader=False)
+    # ❌ DO NOT run app.run() in production
+
 
 
 
