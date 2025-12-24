@@ -17,14 +17,22 @@ def month_name_filter(month_str):
 # ------------ BASIC CONFIG ------------
 
 # Use /tmp on Render (always writable)
-DATA_DIR = os.environ.get("DATA_DIR", "/tmp")
-DB_PATH = os.path.join(DATA_DIR, "rent_management.db")
+# ------------ DATABASE CONFIG (PostgreSQL) ------------
 
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is not set")
+
+# Fix for Render/Railway old postgres:// URLs
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# SECRET KEY (use env in production)
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key")
+# SECRET KEY (must come from environment)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 db = SQLAlchemy(app)
 
